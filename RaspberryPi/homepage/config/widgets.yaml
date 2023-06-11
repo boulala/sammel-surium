@@ -1,0 +1,42 @@
+---
+# For configuration options and examples, please see:
+# https://github.com/benphelps/homepage/wiki/Information-Widgets
+
+- resources:
+    label: CPU
+    cpu: true
+
+- resources:
+    label: Memory
+    memory: true
+
+- resources:
+    label: Storage
+    disk: /
+
+# - search:
+#     provider: google
+#     target: _self
+
+- openmeteo:
+    label: Bern # optional
+    latitude: 46.98
+    longitude: 7.44
+    timezone: Europe/Zurich # optional
+    units: metric # or imperial
+    cache: 5 # Time in minutes to cache API responses, to stay within limits
+
+# - openweathermap:
+#     label: Bern
+#     latitude: 46.97533711054691
+#     longitude: 7.430172885933426
+#     units: metric
+#     provider: openweathermap
+#     cache: 15 # Time in minutes to cache API responses, to stay within limits
+
+- datetime:
+    text_size: xl
+    format:
+        dateStyle: medium
+        timeStyle: short
+        hour12: false

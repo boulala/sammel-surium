@@ -1,0 +1,35 @@
+---
+version: "3.8"
+
+volumes:
+  portainer:
+    name: "portainer_data"
+
+services:
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:latest    
+    restart: unless-stopped
+    # ports:
+    #   - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - portainer:/data
+    environment:
+      - TZ=Europe/Zurich
+    labels:
+      - docker-volume-backup.stop-during-backup=portainer
+ 
+networks:
+  default:
+    name: local
+    external: true
+  backend:
+    name: backend
+    external: true
+  remote:
+    name: remote
+    external: true
+  proxy:
+    name: proxy
+    external: true

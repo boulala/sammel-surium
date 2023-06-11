@@ -1,0 +1,3 @@
+docker:
+  host:	docker-socket.local.springlyo.com
+  port: 2375

@@ -1,0 +1,29 @@
+---
+version: "3.8"
+
+services:
+  twingate:
+    container_name: vpn-twingate
+    image: twingate/connector:1
+    restart: always
+    networks:
+      - remote
+    environment:
+      TENANT_URL: ${TENANT_URL}
+      ACCESS_TOKEN: ${ACCESS_TOKEN}
+      REFRESH_TOKEN: ${REFRESH_TOKEN}
+      TWINGATE_LABEL_HOSTNAME: ${TWINGATE_LABEL_HOSTNAME}
+      TZ: Europe/Zurich
+    sysctls:
+      - net.ipv4.ping_group_range=0 2147483647
+
+networks:
+  default:
+    name: local
+    external: true
+  backend:
+    name: backend
+    external: true
+  remote:
+    name: remote
+    external: true

@@ -1,0 +1,33 @@
+---
+version: "3.8"
+
+volumes:
+  vaultwarden:
+    name: "vaultwarden_data"
+
+services:
+  vaultwarden:
+    container_name: vaultwarden
+    image: vaultwarden/server:latest
+    restart: always
+    networks:
+      - remote
+    # ports:
+    #   - 80:80
+    volumes:
+      - vaultwarden:/data
+    environment:
+      - TZ=Europe/Zurich
+    labels:
+      - docker-volume-backup.stop-during-backup=vaultwarden
+
+networks:
+  default:
+    name: local
+    external: true
+  backend:
+    name: backend
+    external: true
+  remote:
+    name: remote
+    external: true

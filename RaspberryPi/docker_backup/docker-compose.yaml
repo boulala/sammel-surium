@@ -1,0 +1,91 @@
+---
+version: "3.8"
+
+volumes:
+  duplicati_data:
+    external: true
+  nginx_data:
+    external: true
+  letsencrypt:
+    external: true
+  portainer_data:
+    external: true
+  vaultwarden_data:
+    external: true
+
+services:
+  backup_01:
+    container_name: backup-duplicati
+    image: offen/docker-volume-backup:latest
+    restart: always
+    networks:
+      - backend
+    env_file: ./config.env
+    environment:
+      - TZ=Europe/Zurich
+      - BACKUP_FILENAME=backup-$$HOSTNAME_DUPLICATI-%Y-%m-%d.tar.gz
+      - BACKUP_STOP_CONTAINER_LABEL=duplicati
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - duplicati_data:/backup/duplicati-backup:ro
+      - ./archive:/archive
+
+  backup_02:
+    container_name: backup-nginx
+    image: offen/docker-volume-backup:latest
+    restart: always
+    networks:
+      - backend
+    env_file: ./config.env
+    environment:
+      - TZ=Europe/Zurich
+      - BACKUP_FILENAME=backup-$$HOSTNAME_NGINX-%Y-%m-%d.tar.gz
+      - BACKUP_STOP_CONTAINER_LABEL=nginx
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - nginx_data:/backup/nginx-backup:ro
+      - letsencrypt:/backup/letsencrypt-backup:ro
+      - ./archive:/archive
+  
+  backup_03:
+    container_name: backup-portainer
+    image: offen/docker-volume-backup:latest
+    restart: always
+    networks:
+      - backend
+    env_file: ./config.env
+    environment:
+      - TZ=Europe/Zurich
+      - BACKUP_FILENAME=backup-$$HOSTNAME_PORTAINER-%Y-%m-%d.tar.gz
+      - BACKUP_STOP_CONTAINER_LABEL=portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - portainer_data:/backup/portainer-backup:ro
+      - ./archive:/archive
+
+  backup_04:
+    container_name: backup-vaultwarden
+    image: offen/docker-volume-backup:latest
+    restart: always
+    networks:
+      - backend
+    env_file: ./config.env
+    environment:
+      - TZ=Europe/Zurich
+      - BACKUP_FILENAME=backup-$$HOSTNAME_VAULTWARDEN-%Y-%m-%d.tar.gz
+      - BACKUP_STOP_CONTAINER_LABEL=vaultwarden
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - vaultwarden_data:/backup/vaultwarden-backup:ro
+      - ./archive:/archive
+
+networks:
+  default:
+    name: local
+    external: true
+  backend:
+    name: backend
+    external: true
+  remote:
+    name: remote
+    external: true
