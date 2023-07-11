@@ -6,3 +6,13 @@
       apt:
         upgrade: yes
         update_cache: yes
+    
+    - name: check if reboot required
+      stat:
+        path: /var/run/reboot-required
+      register: reboot_required_file
+    
+    - name: reboot if required
+      reboot:
+      when: reboot_required_file.stat.exists == true
+      
